@@ -242,7 +242,18 @@ class Tooltip extends Component {
   render() {
     return (
       <div
-        ref={(tooltip) => { this.tooltipDOM = tooltip; }}
+        ref={(tooltip) => {
+          let referenceElement = tooltip
+
+          if (this.props.selector) {
+            const el = document.querySelector(this.props.selector)
+            if (el) {
+              referenceElement = el
+            }
+          }
+          
+          return this.tooltipDOM = referenceElement
+        }}
         title={this.props.title}
         className={this.props.className}
         tabIndex={this.props.tabIndex}
