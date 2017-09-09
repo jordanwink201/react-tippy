@@ -16,8 +16,16 @@
     <title>React App</title>
   </head>
   <body>
-    <button id='testing'>Attach a tooltip to me</button>
-    <button id='testing2'>Attach a different tooltip to me</button>
+    <iframe id='tooltip-iframe' style="width: 400px; height: 400px;position: relative;"></iframe>
+    <button id='testing3'>Attach a tooltip to me</button>
+
+    <script type="text/javascript">
+      var doc = document.getElementById('tooltip-iframe').contentWindow.document;
+      doc.open();
+      doc.write("<button id='testing'>Attach a tooltip to me</button>");
+      doc.write("<button id='testing2'>Attach a different tooltip to me</button>");
+      doc.close();
+    </script>
     <div id="root"></div>
     <!--
       This HTML file is a template.

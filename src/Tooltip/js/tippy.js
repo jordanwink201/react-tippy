@@ -59,6 +59,7 @@ class Tippy {
       hidden: settings.onHidden || settings.hidden || noop
     }
 
+    debugger
     this.store = createTooltips.call(this, getArrayOfElements(selector))
     Store.push.apply(Store, this.store)
   }

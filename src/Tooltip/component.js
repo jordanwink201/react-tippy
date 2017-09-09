@@ -114,8 +114,9 @@ class Tooltip extends Component {
       this.updateTippy();
     }
 
-    // Update content
-    if (this.props.selector !== prevProps.selector) {
+    // Update tooltipSelector
+    if (this.props.tooltipSelector !== prevProps.tooltipSelector) {
+      debugger
       this.initTippy();
     }
 
@@ -247,14 +248,15 @@ class Tooltip extends Component {
   render() {
     return (
       <div
-        ref={(tooltip) => {
+        ref={tooltip => {
           let referenceElement = tooltip
 
-          if (this.props.selector) {
-            const el = document.querySelector(this.props.selector)
-            if (el) {
+          debugger
+          if (this.props.tooltipSelector) {
+            const el = window.document.querySelector(this.props.tooltipSelector)
+
+            if (el)
               referenceElement = el
-            }
           }
           
           return this.tooltipDOM = referenceElement

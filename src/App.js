@@ -125,7 +125,8 @@ const TooltipContent = connect(mapStateToProps)(TooltipContentComponent);
 
 class App extends Component {
   state = {
-    selector: '#testing',
+    tooltipSelector: '#testing3',
+    tooltipIframeId: 'tooltip-iframe',
   }
 
   render() {
@@ -144,7 +145,8 @@ class App extends Component {
         <button onClick={() => {
           this.tooltipDOM.destroyTippy()
           this.setState({
-            selector: '#testing2',
+            tooltipSelector: '#testing3',
+            tooltipIframeId: '',
           })
         }}>destroy tooltip</button>
       </div>
@@ -152,16 +154,17 @@ class App extends Component {
   }
 
   renderTooltip () {
+    // document.getElementById(tooltipIframeId).contentWindow.document
     return (
       <Tooltip
-        ref={(tooltip) => {
-          return this.tooltipDOM = tooltip
-        }}
-        selector={this.state.selector}
-        title="Welcome to React"
-        position="bottom"
-        trigger="click"
-        open="true"
+        ref={tooltip => this.tooltipDOM = tooltip}
+        html={(
+          <p>Hello there</p>
+        )}
+        arrow={true}
+        open={true}
+        tooltipSelector={this.state.tooltipSelector}
+        tooltipIframeId={this.state.tooltipIframeId}
       />
     )
   }

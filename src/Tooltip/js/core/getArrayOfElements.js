@@ -12,5 +12,6 @@ export default function getArrayOfElements(selector) {
     return selector
   }
 
+  debugger
   return [].slice.call(document.querySelectorAll(selector))
 }
