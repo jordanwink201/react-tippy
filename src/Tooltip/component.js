@@ -114,6 +114,11 @@ class Tooltip extends Component {
       this.updateTippy();
     }
 
+    // Update content
+    if (this.props.selector !== prevProps.selector) {
+      this.initTippy();
+    }
+
     // update otherProps
     const propChanges = detectPropsChanged(this.props, prevProps);
     propChanges.forEach(key => {
