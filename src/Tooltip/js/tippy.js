@@ -39,7 +39,7 @@ class Tippy {
     if (!Browser.SUPPORTED) return
 
     // DOM is presumably mostly ready (for document.body) by instantiation time
-    init()
+    init(settings.shadowDOMReference)
 
     this.state = {
       destroyed: false
@@ -59,7 +59,6 @@ class Tippy {
       hidden: settings.onHidden || settings.hidden || noop
     }
 
-    debugger
     this.store = createTooltips.call(this, getArrayOfElements(selector))
     Store.push.apply(Store, this.store)
   }

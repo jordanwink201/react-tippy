@@ -6,7 +6,6 @@
 export default function elementIsInViewport(el) {
   const rect = el.getBoundingClientRect()
 
-  debugger
   return (
     rect.top >= 0 &&
     rect.left >= 0 &&

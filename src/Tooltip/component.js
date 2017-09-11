@@ -116,7 +116,6 @@ class Tooltip extends Component {
 
     // Update tooltipSelector
     if (this.props.tooltipSelector !== prevProps.tooltipSelector) {
-      debugger
       this.initTippy();
     }
 
@@ -223,6 +222,7 @@ class Tooltip extends Component {
         useContext: this.props.useContext,
         reactInstance: this.props.useContext ? this : undefined,
         performance: true,
+        shadowDOMReference: this.props.shadowDOMReference ? this.props.shadowDOMReference : null,
       });
       if (this.props.open) {
         this.showTooltip();
@@ -251,7 +251,6 @@ class Tooltip extends Component {
         ref={tooltip => {
           let referenceElement = tooltip
 
-          debugger
           if (this.props.tooltipSelector) {
             const el = window.document.querySelector(this.props.tooltipSelector)
 

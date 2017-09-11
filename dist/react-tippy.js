@@ -495,8 +495,8 @@ var Tooltip = function (_Component) {
         this.updateTippy();
       }
 
-      // Update content
-      if (this.props.selector !== prevProps.selector) {
+      // Update tooltipSelector
+      if (this.props.tooltipSelector !== prevProps.tooltipSelector) {
         this.initTippy();
       }
 
@@ -608,7 +608,8 @@ var Tooltip = function (_Component) {
           onRequestClose: this.props.onRequestClose,
           useContext: this.props.useContext,
           reactInstance: this.props.useContext ? this : undefined,
-          performance: true
+          performance: true,
+          shadowDOMReference: this.props.shadowDOMReference ? this.props.shadowDOMReference : null
         });
         if (this.props.open) {
           this.showTooltip();
@@ -642,11 +643,10 @@ var Tooltip = function (_Component) {
           ref: function ref(tooltip) {
             var referenceElement = tooltip;
 
-            if (_this3.props.selector) {
-              var el = document.querySelector(_this3.props.selector);
-              if (el) {
-                referenceElement = el;
-              }
+            if (_this3.props.tooltipSelector) {
+              var el = window.document.querySelector(_this3.props.tooltipSelector);
+
+              if (el) referenceElement = el;
             }
 
             return _this3.tooltipDOM = referenceElement;
@@ -1673,13 +1673,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 * To run a single time, once DOM is presumed to be ready
 * @return {Boolean} whether the function has run or not
 */
-function init() {
+function init(shadowDom) {
   if (init.done) return false;
   init.done = true;
 
   // If the script is in <head>, document.body is null, so it's set in the
   // init function
-  _globals.Defaults.appendTo = document.body;
+
+  if (shadowDom) {
+    _globals.Defaults.appendTo = shadowDom;
+  } else {
+    _globals.Defaults.appendTo = document.body;
+  }
 
   (0, _bindEventListeners2.default)();
 
@@ -2001,7 +2006,7 @@ var Tippy = function () {
     if (!_globals.Browser.SUPPORTED) return;
 
     // DOM is presumably mostly ready (for document.body) by instantiation time
-    (0, _init2.default)();
+    (0, _init2.default)(settings.shadowDOMReference);
 
     this.state = {
       destroyed: false
