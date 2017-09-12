@@ -109,11 +109,6 @@ class Tooltip extends Component {
       this.updateReactDom();
     }
 
-    // Update content
-    if (this.props.title !== prevProps.title) {
-      this.updateTippy();
-    }
-
     // Update tooltipSelector
     if (this.props.tooltipSelector !== prevProps.tooltipSelector) {
       this.initTippy();
@@ -185,7 +180,6 @@ class Tooltip extends Component {
       return;
     }
     if (!this.props.disabled) {
-      this.tooltipDOM.setAttribute('title', this.props.title);
       this.tippy = tippy(this.tooltipDOM, {
         disabled: this.props.disabled,
         position: this.props.position,
@@ -260,7 +254,6 @@ class Tooltip extends Component {
           
           return this.tooltipDOM = referenceElement
         }}
-        title={this.props.title}
         className={this.props.className}
         tabIndex={this.props.tabIndex}
         style={{

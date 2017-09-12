@@ -3,8 +3,6 @@ import createPopperElement      from './createPopperElement'
 import createTrigger            from './createTrigger'
 import getEventListenerHandlers from './getEventListenerHandlers'
 
-import removeTitle from '../utils/removeTitle'
-
 import { Store } from './globals'
 
 let idCounter = 1
@@ -24,16 +22,9 @@ export default function createTooltips(els) {
     // animateFill is disabled if an arrow is true
     if (settings.arrow) settings.animateFill = false
 
-    const { html, trigger, touchHold } = settings
+    const { trigger, touchHold } = settings
 
-    const title = el.getAttribute('title')
-    if (!title && !html) return a
-
-    el.setAttribute('data-tooltipped', '')
-    el.setAttribute('aria-describedby', `tippy-tooltip-${id}`)
-    removeTitle(el)
-
-    const popper = createPopperElement(id, title, settings)
+    const popper = createPopperElement(id, settings)
     const handlers = getEventListenerHandlers.call(this, el, popper, settings)
 
     let listeners = []

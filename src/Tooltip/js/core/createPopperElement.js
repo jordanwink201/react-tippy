@@ -4,11 +4,10 @@ import getOffsetDistanceInPx from '../utils/getOffsetDistanceInPx'
 /**
 * Creates a popper element then returns it
 * @param {Number} id - the popper id
-* @param {String} title - the tooltip's `title` attribute
 * @param {Object} settings - individual settings
 * @return {Element} - the popper element
 */
-export default function createPopperElement(id, title, settings) {
+export default function createPopperElement(id, settings) {
   const {
     position,
     distance,
@@ -85,7 +84,7 @@ export default function createPopperElement(id, title, settings) {
     tooltip.setAttribute('data-template-id', templateId)
 
   } else {
-    content.innerHTML = title
+    content.innerHTML = 'no html was found..., should error'
   }
 
   // Init distance. Further updates are made in the popper instance's `onUpdate()` method

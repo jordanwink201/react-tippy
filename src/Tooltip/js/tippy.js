@@ -13,7 +13,6 @@ import queueExecution          from './utils/queueExecution'
 import prefix                  from './utils/prefix'
 import find                    from './utils/find'
 import findIndex               from './utils/findIndex'
-import removeTitle             from './utils/removeTitle'
 import elementIsInViewport     from './utils/elementIsInViewport'
 import triggerReflow           from './utils/triggerReflow'
 import modifyClassList         from './utils/modifyClassList'
@@ -173,17 +172,9 @@ class Tippy {
         followCursor,
         flipDuration,
         duration,
-        dynamicTitle
+        dynamicTitle,
       }
     } = refData
-
-    if (dynamicTitle) {
-      const title = el.getAttribute('title')
-      if (title) {
-        content.innerHTML = title
-        removeTitle(el)
-      }
-    }
 
     const _duration = customDuration !== undefined
       ? customDuration
@@ -344,9 +335,7 @@ class Tippy {
 
     content.innerHTML = html
       ? document.getElementById(html.replace('#', '')).innerHTML
-      : el.getAttribute('title') || el.getAttribute('data-original-title')
-
-    if (!html) removeTitle(el)
+      : 'no html found in the tooltip element, should error'
   }
 
   /**
@@ -373,13 +362,6 @@ class Tippy {
 
     // Remove Tippy-only event listeners from tooltipped element
     listeners.forEach(listener => el.removeEventListener(listener.event, listener.handler))
-
-    // Restore original title
-    el.setAttribute('title', el.getAttribute('data-original-title'))
-
-    el.removeAttribute('data-original-title')
-    el.removeAttribute('data-tooltipped')
-    el.removeAttribute('aria-describedby')
 
     popperInstance && popperInstance.destroy()
     _mutationObserver && _mutationObserver.disconnect()
