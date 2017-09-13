@@ -137,7 +137,9 @@ class App extends Component {
     shadowRoot.innerHTML = css
 
     this.state = {
-      tooltipSelector: '#testing3',
+      isOpen: true,
+      isEdited: false,
+      tooltipSelector: '#testing1',
       shadowDOMReference: shadowRoot,
     }
   }
@@ -156,28 +158,69 @@ class App extends Component {
         { this.renderTooltip() }
 
         <button onClick={() => {
-          this.tooltipDOM.destroyTippy()
           this.setState({
-            tooltipSelector: '#testing4',
+            isOpen: true,
+            tooltipSelector: '#testing2',
           })
-        }}>destroy tooltip</button>
+        }}>Select Element #2</button>
+
+        <button onClick={() => {
+          this.setState({
+            isOpen: true,
+            tooltipSelector: '#testing3',
+          })
+        }}>Select Element #3</button>
+
+        <button onClick={() => {
+          this.setState({
+            isOpen: false,
+          })
+        }}>hide</button>
+
+        <button onClick={() => {
+          this.setState({
+            isEdited: true,
+          })
+        }}>change tooltip html</button>
       </div>
     )
   }
 
   renderTooltip () {
+
+    const PopoverContent = (
+      <div onClick={() => {
+        this.setState({ visible: false })
+      }}>
+        PopoverContent...
+      </div>
+    )
+
     return (
       <Tooltip
-        ref={tooltip => this.tooltipDOM = tooltip}
         html={(
-          <p>Hello there</p>
+          <div onClick={() => {
+            debugger
+          }}>
+            PopoverContent...
+            {this.getSaveButton()}
+          </div>
+
         )}
         arrow={true}
-        open={true}
+        open={this.state.isOpen}
+        interactive
         tooltipSelector={this.state.tooltipSelector}
         shadowDOMReference={this.state.shadowDOMReference}
       />
     )
+  }
+
+  getSaveButton () {
+    if (this.state.isEdited)
+      return (
+        <button>Save</button>
+      )
   }
 }
 

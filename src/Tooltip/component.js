@@ -80,6 +80,14 @@ class Tooltip extends Component {
     if (typeof window === 'undefined' || typeof document === 'undefined' ) {
       return;
     }
+
+    // THIS NEEDS to be first Update tooltipSelector
+    if (this.props.tooltipSelector !== prevProps.tooltipSelector) {
+      this.destroyTippy(this.oldTooltipDOM);
+      this.initTippy();
+      return;
+    }
+
     if (this.props.disabled === false && prevProps.disabled === true) {
       this.updateSettings('disabled', false);
       this.destroyTippy();
@@ -109,11 +117,6 @@ class Tooltip extends Component {
       this.updateReactDom();
     }
 
-    // Update tooltipSelector
-    if (this.props.tooltipSelector !== prevProps.tooltipSelector) {
-      this.initTippy();
-    }
-
     // update otherProps
     const propChanges = detectPropsChanged(this.props, prevProps);
     propChanges.forEach(key => {
@@ -141,12 +144,13 @@ class Tooltip extends Component {
     }
   }
 
-  _updateSettings(name, value) {
+  _updateSettings(name, value, oldTooltipDOM) {
     if (typeof window === 'undefined' || typeof document === 'undefined' ) {
       return;
     }
     if (this.tippy) {
-      const popper = this.tippy.getPopperElement(this.tooltipDOM);
+      const tooltip = oldTooltipDOM ? oldTooltipDOM : this.tooltipDOM
+      const popper = this.tippy.getPopperElement(tooltip);
       this.tippy.updateSettings(popper, name, value);
     }
   }
@@ -226,13 +230,16 @@ class Tooltip extends Component {
     }
   }
 
-  _destroyTippy() {
+  _destroyTippy(oldTooltipDOM) {
     if (typeof window === 'undefined' || typeof document === 'undefined' ) {
       return;
     }
+
+    const tooltip = oldTooltipDOM ? oldTooltipDOM : this.tooltipDOM
+
     if (this.tippy) {
-      const popper = this.tippy.getPopperElement(this.tooltipDOM);
-      this.updateSettings('open', false);
+      const popper = this.tippy.getPopperElement(tooltip);
+      this.updateSettings('open', false, tooltip);
       this.tippy.hide(popper, 0);
       this.tippy.destroy(popper);
       this.tippy = null;
@@ -252,7 +259,11 @@ class Tooltip extends Component {
               referenceElement = el
           }
           
-          return this.tooltipDOM = referenceElement
+          // Save a reference to the old tooltip when a new selector comes in
+          if (referenceElement !== this.tooltipDOM) {
+            this.oldTooltipDOM = this.tooltipDOM ? this.tooltipDOM : null
+          }
+          this.tooltipDOM = referenceElement
         }}
         className={this.props.className}
         tabIndex={this.props.tabIndex}

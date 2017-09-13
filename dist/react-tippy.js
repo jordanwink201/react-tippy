@@ -461,6 +461,14 @@ var Tooltip = function (_Component) {
       if (typeof window === 'undefined' || typeof document === 'undefined') {
         return;
       }
+
+      // THIS NEEDS to be first Update tooltipSelector
+      if (this.props.tooltipSelector !== prevProps.tooltipSelector) {
+        this.destroyTippy(this.oldTooltipDOM);
+        this.initTippy();
+        return;
+      }
+
       if (this.props.disabled === false && prevProps.disabled === true) {
         this.updateSettings('disabled', false);
         this.destroyTippy();
@@ -488,11 +496,6 @@ var Tooltip = function (_Component) {
 
       if (this.props.html !== prevProps.html) {
         this.updateReactDom();
-      }
-
-      // Update tooltipSelector
-      if (this.props.tooltipSelector !== prevProps.tooltipSelector) {
-        this.initTippy();
       }
 
       // update otherProps
@@ -525,12 +528,13 @@ var Tooltip = function (_Component) {
     }
   }, {
     key: '_updateSettings',
-    value: function _updateSettings(name, value) {
+    value: function _updateSettings(name, value, oldTooltipDOM) {
       if (typeof window === 'undefined' || typeof document === 'undefined') {
         return;
       }
       if (this.tippy) {
-        var popper = this.tippy.getPopperElement(this.tooltipDOM);
+        var tooltip = oldTooltipDOM ? oldTooltipDOM : this.tooltipDOM;
+        var popper = this.tippy.getPopperElement(tooltip);
         this.tippy.updateSettings(popper, name, value);
       }
     }
@@ -614,13 +618,16 @@ var Tooltip = function (_Component) {
     }
   }, {
     key: '_destroyTippy',
-    value: function _destroyTippy() {
+    value: function _destroyTippy(oldTooltipDOM) {
       if (typeof window === 'undefined' || typeof document === 'undefined') {
         return;
       }
+
+      var tooltip = oldTooltipDOM ? oldTooltipDOM : this.tooltipDOM;
+
       if (this.tippy) {
-        var popper = this.tippy.getPopperElement(this.tooltipDOM);
-        this.updateSettings('open', false);
+        var popper = this.tippy.getPopperElement(tooltip);
+        this.updateSettings('open', false, tooltip);
         this.tippy.hide(popper, 0);
         this.tippy.destroy(popper);
         this.tippy = null;
@@ -643,7 +650,11 @@ var Tooltip = function (_Component) {
               if (el) referenceElement = el;
             }
 
-            return _this3.tooltipDOM = referenceElement;
+            // Save a reference to the old tooltip when a new selector comes in
+            if (referenceElement !== _this3.tooltipDOM) {
+              _this3.oldTooltipDOM = _this3.tooltipDOM ? _this3.tooltipDOM : null;
+            }
+            _this3.tooltipDOM = referenceElement;
           },
           className: this.props.className,
           tabIndex: this.props.tabIndex,
