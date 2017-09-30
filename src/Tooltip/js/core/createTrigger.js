@@ -34,12 +34,6 @@ export default function createTrigger(event, el, handlers, touchHold) {
         handler: handlers.handleMouseleave
       })
     }
-
-    el.addEventListener('mouseleave', handlers.handleMouseleave)
-    listeners.push({
-      event: 'mouseleave',
-      handler: handlers.handleMouseleave
-    })
   }
 
   if (event === 'focus') {

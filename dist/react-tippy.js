@@ -1351,12 +1351,6 @@ function createTrigger(event, el, handlers, touchHold) {
         handler: handlers.handleMouseleave
       });
     }
-
-    el.addEventListener('mouseleave', handlers.handleMouseleave);
-    listeners.push({
-      event: 'mouseleave',
-      handler: handlers.handleMouseleave
-    });
   }
 
   if (event === 'focus') {
@@ -1508,49 +1502,49 @@ function getEventListenerHandlers(el, popper, settings) {
   };
 
   var handleMouseleave = function handleMouseleave(event) {
+    // // Don't fire 'mouseleave', use the 'touchend'
+    // if (event.type === 'mouseleave' && Browser.SUPPORTS_TOUCH &&
+    // Browser.touch && touchHold) {
+    //   return
+    // }
 
-    // Don't fire 'mouseleave', use the 'touchend'
-    if (event.type === 'mouseleave' && _globals.Browser.SUPPORTS_TOUCH && _globals.Browser.touch && touchHold) {
-      return;
-    }
+    // if (interactive) {
+    //   // Temporarily handle mousemove to check if the mouse left somewhere
+    //   // other than its popper
+    //   const handleMousemove = event => {
 
-    if (interactive) {
-      // Temporarily handle mousemove to check if the mouse left somewhere
-      // other than its popper
-      var handleMousemove = function handleMousemove(event) {
+    //     const triggerHide = () => {
+    //       document.body.removeEventListener('mouseleave', hide)
+    //       document.removeEventListener('mousemove', handleMousemove)
+    //       hide()
+    //     }
 
-        var triggerHide = function triggerHide() {
-          document.body.removeEventListener('mouseleave', hide);
-          document.removeEventListener('mousemove', handleMousemove);
-          hide();
-        };
+    //     const closestTooltippedEl = closest(event.target, Selectors.TOOLTIPPED_EL)
 
-        var closestTooltippedEl = (0, _closest2.default)(event.target, _globals.Selectors.TOOLTIPPED_EL);
+    //     const isOverPopper = closest(event.target, Selectors.POPPER) === popper
+    //     const isOverEl = closestTooltippedEl === el
+    //     const isClickTriggered = trigger.indexOf('click') !== -1
+    //     const isOverOtherTooltippedEl = closestTooltippedEl && closestTooltippedEl !== el
 
-        var isOverPopper = (0, _closest2.default)(event.target, _globals.Selectors.POPPER) === popper;
-        var isOverEl = closestTooltippedEl === el;
-        var isClickTriggered = trigger.indexOf('click') !== -1;
-        var isOverOtherTooltippedEl = closestTooltippedEl && closestTooltippedEl !== el;
+    //     if (isOverOtherTooltippedEl) {
+    //       return triggerHide()
+    //     }
 
-        if (isOverOtherTooltippedEl) {
-          return triggerHide();
-        }
+    //     if (isOverPopper || isOverEl || isClickTriggered) return
 
-        if (isOverPopper || isOverEl || isClickTriggered) return;
+    //     if (cursorIsOutsideInteractiveBorder(event, popper, settings)) {
+    //       triggerHide()
+    //     }
+    //   }
 
-        if ((0, _cursorIsOutsideInteractiveBorder2.default)(event, popper, settings)) {
-          triggerHide();
-        }
-      };
+    //   document.body.addEventListener('mouseleave', hide)
+    //   document.addEventListener('mousemove', handleMousemove)
 
-      document.body.addEventListener('mouseleave', hide);
-      document.addEventListener('mousemove', handleMousemove);
+    //   return
+    // }
 
-      return;
-    }
-
-    // If it's not interactive, just hide it
-    hide();
+    // // If it's not interactive, just hide it
+    // hide()
   };
 
   var handleBlur = function handleBlur(event) {
