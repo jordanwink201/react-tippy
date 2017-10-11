@@ -141,6 +141,7 @@ class App extends Component {
       isEdited: false,
       tooltipSelector: '#testing1',
       shadowDOMReference: shadowRoot,
+      shouldWatchStateDependency: true,
     }
   }
 
@@ -159,10 +160,16 @@ class App extends Component {
 
         <button onClick={() => {
           this.setState({
+            shouldWatchStateDependency: false,
+          })
+        }}>Stop Watching</button>
+
+        <button onClick={() => {
+          this.setState({
             isOpen: true,
             tooltipSelector: '#testing2',
           })
-        }}>Select Element #2</button>
+        }}>Select Element #222</button>
 
         <button onClick={() => {
           this.setState({
@@ -205,13 +212,23 @@ class App extends Component {
             PopoverContent...
             {this.getSaveButton()}
           </div>
-
         )}
         arrow={true}
         open={this.state.isOpen}
+        offStateDependency={() => {
+          this.setState({
+            isOpen: false,
+          })
+        }}
+        onStateDependency={() => {
+          this.setState({
+            isOpen: true,
+          })
+        }}
         interactive
         tooltipSelector={this.state.tooltipSelector}
         shadowDOMReference={this.state.shadowDOMReference}
+        shouldWatchStateDependency={this.state.shouldWatchStateDependency}
       />
     )
   }

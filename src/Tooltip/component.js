@@ -49,6 +49,29 @@ const detectPropsChanged = (props, prevProps) => {
   return result;
 }
 
+const interval = {
+  intervals : [],
+
+  make: function (fun, delay) {
+    const newKey = this.intervals.length +1
+    this.intervals[newKey] = setInterval(fun,delay)
+    return newKey
+  },
+
+  clear: function ( id ) {
+    clearInterval( this.intervals[id] )
+    delete this.intervals[id]
+    return true
+  },
+
+  clearAll: function () {
+    for (const key in this.intervals) {
+      clearInterval(this.intervals[key])
+      delete this.intervals[key]
+    }
+  }
+}
+
 class Tooltip extends Component {
   constructor(props) {
     super(props);
@@ -79,6 +102,11 @@ class Tooltip extends Component {
     // enable and disabled
     if (typeof window === 'undefined' || typeof document === 'undefined' ) {
       return;
+    }
+
+    if (!this.props.shouldWatchStateDependency) {
+      // clear all the intervals
+      interval.clearAll()
     }
 
     // THIS NEEDS to be first Update tooltipSelector
@@ -217,14 +245,40 @@ class Tooltip extends Component {
         sticky: this.props.sticky,
         stickyDuration: this.props.stickyDuration,
         onRequestClose: this.props.onRequestClose,
+        offStateDependency: this.props.offStateDependency ? this.props.offStateDependency : null,
+        onStateDependency: this.props.onStateDependency ? this.props.onStateDependency : null,
         useContext: this.props.useContext,
         reactInstance: this.props.useContext ? this : undefined,
         performance: true,
         shadowDOMReference: this.props.shadowDOMReference ? this.props.shadowDOMReference : null,
+        shouldWatchStateDependency: this.props.shouldWatchStateDependency ? this.props.shouldWatchStateDependency : false,
       });
-      if (this.props.open) {
+
+      const target = window.document.querySelector(this.props.tooltipSelector)
+
+      const isStateDependentInterval = () => {
+        if (target.offsetHeight !== 0) {
+          if (this.props.onStateDependency) this.props.onStateDependency.call()
+          this.showTooltip()
+          interval.clearAll()
+          interval.make(isNotStateDependentInterval, 200)
+        }
+      }
+
+      const isNotStateDependentInterval = () => {
+        if (target.offsetHeight === 0) {
+          if (this.props.offStateDependency) this.props.offStateDependency.call()
+          interval.clearAll()
+          interval.make(isStateDependentInterval, 200)
+        }
+      }
+
+      if (this.props.shouldWatchStateDependency && target.offsetHeight === 0) {
+        interval.make(isStateDependentInterval, 200)
+      } else if (this.props.open) {
         this.showTooltip();
       }
+
     } else {
       this.tippy = null;
     }

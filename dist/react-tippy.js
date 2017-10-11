@@ -418,6 +418,29 @@ var detectPropsChanged = function detectPropsChanged(props, prevProps) {
   return result;
 };
 
+var interval = {
+  intervals: [],
+
+  make: function make(fun, delay) {
+    var newKey = this.intervals.length + 1;
+    this.intervals[newKey] = setInterval(fun, delay);
+    return newKey;
+  },
+
+  clear: function clear(id) {
+    clearInterval(this.intervals[id]);
+    delete this.intervals[id];
+    return true;
+  },
+
+  clearAll: function clearAll() {
+    for (var key in this.intervals) {
+      clearInterval(this.intervals[key]);
+      delete this.intervals[key];
+    }
+  }
+};
+
 var Tooltip = function (_Component) {
   _inherits(Tooltip, _Component);
 
@@ -460,6 +483,12 @@ var Tooltip = function (_Component) {
       // enable and disabled
       if (typeof window === 'undefined' || typeof document === 'undefined') {
         return;
+      }
+
+      debugger;
+      if (!this.props.shouldWatchStateDependency) {
+        // clear all the intervals
+        interval.clearAll();
       }
 
       // THIS NEEDS to be first Update tooltipSelector
@@ -567,6 +596,8 @@ var Tooltip = function (_Component) {
   }, {
     key: '_initTippy',
     value: function _initTippy() {
+      var _this3 = this;
+
       if (typeof window === 'undefined' || typeof document === 'undefined') {
         return;
       }
@@ -604,12 +635,38 @@ var Tooltip = function (_Component) {
           sticky: this.props.sticky,
           stickyDuration: this.props.stickyDuration,
           onRequestClose: this.props.onRequestClose,
+          offStateDependency: this.props.offStateDependency ? this.props.offStateDependency : null,
+          onStateDependency: this.props.onStateDependency ? this.props.onStateDependency : null,
           useContext: this.props.useContext,
           reactInstance: this.props.useContext ? this : undefined,
           performance: true,
-          shadowDOMReference: this.props.shadowDOMReference ? this.props.shadowDOMReference : null
+          shadowDOMReference: this.props.shadowDOMReference ? this.props.shadowDOMReference : null,
+          shouldWatchStateDependency: this.props.shouldWatchStateDependency ? this.props.shouldWatchStateDependency : false
         });
-        if (this.props.open) {
+
+        var target = window.document.querySelector(this.props.tooltipSelector);
+
+        var isStateDependentInterval = function isStateDependentInterval() {
+          if (target.offsetHeight !== 0) {
+            if (_this3.props.onStateDependency) _this3.props.onStateDependency.call();
+            _this3.showTooltip();
+            interval.clearAll();
+            interval.make(_isNotStateDependentInterval, 200);
+          }
+        };
+
+        var _isNotStateDependentInterval = function _isNotStateDependentInterval() {
+          if (target.offsetHeight === 0) {
+            if (_this3.props.offStateDependency) _this3.props.offStateDependency.call();
+            interval.clearAll();
+            interval.make(isStateDependentInterval, 200);
+          }
+        };
+
+        debugger;
+        if (this.props.shouldWatchStateDependency && target.offsetHeight === 0) {
+          interval.make(isStateDependentInterval, 200);
+        } else if (this.props.open) {
           this.showTooltip();
         }
       } else {
@@ -636,7 +693,7 @@ var Tooltip = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _this3 = this;
+      var _this4 = this;
 
       return _react2.default.createElement(
         'div',
@@ -644,17 +701,17 @@ var Tooltip = function (_Component) {
           ref: function ref(tooltip) {
             var referenceElement = tooltip;
 
-            if (_this3.props.tooltipSelector) {
-              var el = window.document.querySelector(_this3.props.tooltipSelector);
+            if (_this4.props.tooltipSelector) {
+              var el = window.document.querySelector(_this4.props.tooltipSelector);
 
               if (el) referenceElement = el;
             }
 
             // Save a reference to the old tooltip when a new selector comes in
-            if (referenceElement !== _this3.tooltipDOM) {
-              _this3.oldTooltipDOM = _this3.tooltipDOM ? _this3.tooltipDOM : null;
+            if (referenceElement !== _this4.tooltipDOM) {
+              _this4.oldTooltipDOM = _this4.tooltipDOM ? _this4.tooltipDOM : null;
             }
-            _this3.tooltipDOM = referenceElement;
+            _this4.tooltipDOM = referenceElement;
           },
           className: this.props.className,
           tabIndex: this.props.tabIndex,
