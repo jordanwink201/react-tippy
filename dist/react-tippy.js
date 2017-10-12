@@ -485,12 +485,6 @@ var Tooltip = function (_Component) {
         return;
       }
 
-      debugger;
-      if (!this.props.shouldWatchStateDependency) {
-        // clear all the intervals
-        interval.clearAll();
-      }
-
       // THIS NEEDS to be first Update tooltipSelector
       if (this.props.tooltipSelector !== prevProps.tooltipSelector) {
         this.destroyTippy(this.oldTooltipDOM);
@@ -663,8 +657,8 @@ var Tooltip = function (_Component) {
           }
         };
 
-        debugger;
         if (this.props.shouldWatchStateDependency && target.offsetHeight === 0) {
+          interval.clearAll();
           interval.make(isStateDependentInterval, 200);
         } else if (this.props.open) {
           this.showTooltip();

@@ -16,9 +16,12 @@
     <title>React App</title>
   </head>
   <body>
-    <button id='testing1'>Element #1</button>
+    <button id='testing1' style="display: none;">Element #1</button>
     <button id='testing2'>Element #2</button>
     <button id='testing3'>Element #3</button>
+
+    <button id='testing5'>Show Element</button>
+    <button id='testing6'>Hide Element</button>
 
     <div id="root"></div>
     <!--
@@ -31,5 +34,14 @@
       To begin the development, run `npm start`.
       To create a production bundle, use `npm run build`.
     -->
+    <script type="text/javascript">
+      window.document.getElementById('testing5').addEventListener('click', function() {
+        window.document.getElementById('testing1').style.display = 'block'
+      })
+
+      window.document.getElementById('testing6').addEventListener('click', function() {
+        window.document.getElementById('testing1').style.display = 'none'
+      })
+    </script>
   </body>
 </html>
