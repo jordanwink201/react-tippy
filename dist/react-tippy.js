@@ -595,54 +595,98 @@ var Tooltip = function (_Component) {
       if (typeof window === 'undefined' || typeof document === 'undefined') {
         return;
       }
+
+      var _props = this.props,
+          animation = _props.animation,
+          animateFill = _props.animateFill,
+          arrow = _props.arrow,
+          arrowSize = _props.arrowSize,
+          beforeHidden = _props.beforeHidden,
+          beforeShown = _props.beforeShown,
+          delay = _props.delay,
+          disabled = _props.disabled,
+          documentContext = _props.documentContext,
+          hideDelay = _props.hideDelay,
+          distance = _props.distance,
+          duration = _props.duration,
+          followCursor = _props.followCursor,
+          hideDuration = _props.hideDuration,
+          hideOnClick = _props.hideOnClick,
+          hidden = _props.hidden,
+          html = _props.html,
+          inertia = _props.inertia,
+          interactive = _props.interactive,
+          interactiveBorder = _props.interactiveBorder,
+          multiple = _props.multiple,
+          offset = _props.offset,
+          popperOptions = _props.popperOptions,
+          onRequestClose = _props.onRequestClose,
+          open = _props.open,
+          offStateDependency = _props.offStateDependency,
+          onStateDependency = _props.onStateDependency,
+          position = _props.position,
+          shown = _props.shown,
+          size = _props.size,
+          shadowDOMReference = _props.shadowDOMReference,
+          sticky = _props.sticky,
+          stickyDuration = _props.stickyDuration,
+          shouldWatchStateDependency = _props.shouldWatchStateDependency,
+          theme = _props.theme,
+          tooltipSelector = _props.tooltipSelector,
+          trigger = _props.trigger,
+          unmountHTMLWhenHide = _props.unmountHTMLWhenHide,
+          useContext = _props.useContext;
+
+
       if (!this.props.disabled) {
         this.tippy = (0, _tippy2.default)(this.tooltipDOM, {
-          disabled: this.props.disabled,
-          position: this.props.position,
-          animation: this.props.animation,
-          animateFill: this.props.animateFill,
-          arrow: this.props.arrow,
-          arrowSize: this.props.arrowSize,
-          delay: this.props.delay,
-          hideDelay: this.props.hideDelay,
-          trigger: this.props.trigger,
-          duration: this.props.duration,
-          hideDuration: this.props.hideDuration,
-          interactive: this.props.interactive,
-          interactiveBorder: this.props.interactiveBorder,
-          theme: this.props.theme,
-          offset: this.props.offset,
-          hideOnClick: this.props.hideOnClick,
-          multiple: this.props.multiple,
-          size: this.props.size,
-          followCursor: this.props.followCursor,
-          inertia: this.props.inertia,
-          popperOptions: this.props.popperOptions,
-          beforeShown: this.props.beforeShown,
-          shown: this.props.shown,
-          beforeHidden: this.props.beforeHidden,
-          hidden: this.props.hidden,
-          distance: this.props.distance,
-          reactDOM: this.props.html,
-          unmountHTMLWhenHide: this.props.unmountHTMLWhenHide,
-          open: this.props.open,
-          sticky: this.props.sticky,
-          stickyDuration: this.props.stickyDuration,
-          onRequestClose: this.props.onRequestClose,
-          offStateDependency: this.props.offStateDependency ? this.props.offStateDependency : null,
-          onStateDependency: this.props.onStateDependency ? this.props.onStateDependency : null,
-          useContext: this.props.useContext,
-          reactInstance: this.props.useContext ? this : undefined,
+          animation: animation,
+          animateFill: animateFill,
+          arrow: arrow,
+          arrowSize: arrowSize,
+          beforeShown: beforeShown,
+          beforeHidden: beforeHidden,
+          delay: delay,
+          disabled: disabled,
+          distance: distance,
+          documentContext: documentContext ? documentContext : window.document,
+          duration: duration,
+          followCursor: followCursor,
+          hideDelay: hideDelay,
+          hideOnClick: hideOnClick,
+          hideDuration: hideDuration,
+          hidden: hidden,
+          interactive: interactive,
+          interactiveBorder: interactiveBorder,
+          inertia: inertia,
+          multiple: multiple,
+          offset: offset,
+          offStateDependency: offStateDependency,
+          onRequestClose: onRequestClose,
+          onStateDependency: onStateDependency,
+          open: open,
           performance: true,
-          shadowDOMReference: this.props.shadowDOMReference ? this.props.shadowDOMReference : null,
-          shouldWatchStateDependency: this.props.shouldWatchStateDependency ? this.props.shouldWatchStateDependency : false
+          popperOptions: popperOptions,
+          position: position,
+          reactDOM: html,
+          reactInstance: useContext ? this : undefined,
+          shadowDOMReference: shadowDOMReference,
+          shown: shown,
+          shouldWatchStateDependency: shouldWatchStateDependency ? shouldWatchStateDependency : false,
+          size: size,
+          sticky: sticky,
+          stickyDuration: stickyDuration,
+          theme: theme,
+          trigger: trigger,
+          useContext: useContext,
+          unmountHTMLWhenHide: unmountHTMLWhenHide
         });
 
-        var target = window.document.querySelector(this.props.tooltipSelector);
+        var target = documentContext.querySelector(tooltipSelector);
 
         var isStateDependentInterval = function isStateDependentInterval() {
           if (target.offsetHeight !== 0) {
-            if (_this3.props.onStateDependency) _this3.props.onStateDependency.call();
+            if (onStateDependency) onStateDependency.call();
             _this3.showTooltip();
             interval.clearAll();
             interval.make(_isNotStateDependentInterval, 200);
@@ -651,16 +695,16 @@ var Tooltip = function (_Component) {
 
         var _isNotStateDependentInterval = function _isNotStateDependentInterval() {
           if (target.offsetHeight === 0) {
-            if (_this3.props.offStateDependency) _this3.props.offStateDependency.call();
+            if (offStateDependency) offStateDependency.call();
             interval.clearAll();
             interval.make(isStateDependentInterval, 200);
           }
         };
 
-        if (this.props.shouldWatchStateDependency && target.offsetHeight === 0) {
+        if (shouldWatchStateDependency && target.offsetHeight === 0) {
           interval.clearAll();
           interval.make(isStateDependentInterval, 200);
-        } else if (this.props.open) {
+        } else if (open) {
           this.showTooltip();
         }
       } else {
@@ -693,10 +737,15 @@ var Tooltip = function (_Component) {
         'div',
         {
           ref: function ref(tooltip) {
+            var _props2 = _this4.props,
+                documentContext = _props2.documentContext,
+                tooltipSelector = _props2.tooltipSelector;
+
+
             var referenceElement = tooltip;
 
             if (_this4.props.tooltipSelector) {
-              var el = window.document.querySelector(_this4.props.tooltipSelector);
+              var el = documentContext.querySelector(tooltipSelector);
 
               if (el) referenceElement = el;
             }
@@ -1431,8 +1480,8 @@ exports.default = getArrayOfElements;
 * @param {String|Element|Element[]} selector
 * @return {Element[]}
 */
-function getArrayOfElements(selector) {
-  if (selector instanceof Element) {
+function getArrayOfElements(selector, documentContext) {
+  if (selector instanceof Element || documentContext) {
     return [selector];
   }
 
@@ -2037,7 +2086,7 @@ var Tippy = function () {
       hidden: settings.onHidden || settings.hidden || _noop2.default
     };
 
-    this.store = _createTooltips2.default.call(this, (0, _getArrayOfElements2.default)(selector));
+    this.store = _createTooltips2.default.call(this, (0, _getArrayOfElements2.default)(selector, settings.documentContext));
     _globals.Store.push.apply(_globals.Store, this.store);
   }
 

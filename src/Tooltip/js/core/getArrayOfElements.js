@@ -3,8 +3,8 @@
 * @param {String|Element|Element[]} selector
 * @return {Element[]}
 */
-export default function getArrayOfElements(selector) {
-  if (selector instanceof Element) {
+export default function getArrayOfElements(selector, documentContext) {
+  if (selector instanceof Element || documentContext) {
     return [selector]
   }
 

@@ -206,54 +206,98 @@ class Tooltip extends Component {
     if (typeof window === 'undefined' || typeof document === 'undefined' ) {
       return;
     }
+
+    const {
+      animation,
+      animateFill,
+      arrow,
+      arrowSize,
+      beforeHidden,
+      beforeShown,
+      delay,
+      disabled,
+      documentContext,
+      hideDelay,
+      distance,
+      duration,
+      followCursor,
+      hideDuration,
+      hideOnClick,
+      hidden,
+      html,
+      inertia,
+      interactive,
+      interactiveBorder,
+      multiple,
+      offset,
+      popperOptions,
+      onRequestClose,
+      open,
+      offStateDependency,
+      onStateDependency,
+      position,
+      shown,
+      size,
+      shadowDOMReference,
+      sticky,
+      stickyDuration,
+      shouldWatchStateDependency,
+      theme,
+      tooltipSelector,
+      trigger,
+      unmountHTMLWhenHide,
+      useContext,
+    } = this.props
+
     if (!this.props.disabled) {
       this.tippy = tippy(this.tooltipDOM, {
-        disabled: this.props.disabled,
-        position: this.props.position,
-        animation: this.props.animation,
-        animateFill: this.props.animateFill,
-        arrow: this.props.arrow,
-        arrowSize: this.props.arrowSize,
-        delay: this.props.delay,
-        hideDelay: this.props.hideDelay,
-        trigger: this.props.trigger,
-        duration: this.props.duration,
-        hideDuration: this.props.hideDuration,
-        interactive: this.props.interactive,
-        interactiveBorder: this.props.interactiveBorder,
-        theme: this.props.theme,
-        offset: this.props.offset,
-        hideOnClick: this.props.hideOnClick,
-        multiple: this.props.multiple,
-        size: this.props.size,
-        followCursor: this.props.followCursor,
-        inertia: this.props.inertia,
-        popperOptions: this.props.popperOptions,
-        beforeShown: this.props.beforeShown,
-        shown: this.props.shown,
-        beforeHidden: this.props.beforeHidden,
-        hidden: this.props.hidden,
-        distance: this.props.distance,
-        reactDOM: this.props.html,
-        unmountHTMLWhenHide: this.props.unmountHTMLWhenHide,
-        open: this.props.open,
-        sticky: this.props.sticky,
-        stickyDuration: this.props.stickyDuration,
-        onRequestClose: this.props.onRequestClose,
-        offStateDependency: this.props.offStateDependency ? this.props.offStateDependency : null,
-        onStateDependency: this.props.onStateDependency ? this.props.onStateDependency : null,
-        useContext: this.props.useContext,
-        reactInstance: this.props.useContext ? this : undefined,
+        animation,
+        animateFill,
+        arrow,
+        arrowSize,
+        beforeShown,
+        beforeHidden,
+        delay,
+        disabled,
+        distance,
+        documentContext: documentContext ? documentContext : window.document,
+        duration,
+        followCursor,
+        hideDelay,
+        hideOnClick,
+        hideDuration,
+        hidden,
+        interactive,
+        interactiveBorder,
+        inertia,
+        multiple,
+        offset,
+        offStateDependency,
+        onRequestClose,
+        onStateDependency,
+        open,
         performance: true,
-        shadowDOMReference: this.props.shadowDOMReference ? this.props.shadowDOMReference : null,
-        shouldWatchStateDependency: this.props.shouldWatchStateDependency ? this.props.shouldWatchStateDependency : false,
+        popperOptions,
+        position,
+        reactDOM: html,
+        reactInstance: useContext ? this : undefined,
+        shadowDOMReference,
+        shown,
+        shouldWatchStateDependency: shouldWatchStateDependency ? shouldWatchStateDependency : false,
+        size,
+        sticky,
+        stickyDuration,
+        theme,
+        trigger,
+        useContext,
+        unmountHTMLWhenHide,
       });
 
-      const target = window.document.querySelector(this.props.tooltipSelector)
+      const target = documentContext.querySelector(tooltipSelector)
 
       const isStateDependentInterval = () => {
         if (target.offsetHeight !== 0) {
-          if (this.props.onStateDependency) this.props.onStateDependency.call()
+          if (onStateDependency) onStateDependency.call()
           this.showTooltip()
           interval.clearAll()
           interval.make(isNotStateDependentInterval, 200)
@@ -262,16 +306,16 @@ class Tooltip extends Component {
 
       const isNotStateDependentInterval = () => {
         if (target.offsetHeight === 0) {
-          if (this.props.offStateDependency) this.props.offStateDependency.call()
+          if (offStateDependency) offStateDependency.call()
           interval.clearAll()
           interval.make(isStateDependentInterval, 200)
         }
       }
 
-      if (this.props.shouldWatchStateDependency && target.offsetHeight === 0) {
+      if (shouldWatchStateDependency && target.offsetHeight === 0) {
         interval.clearAll()
         interval.make(isStateDependentInterval, 200)
-      } else if (this.props.open) {
+      } else if (open) {
         this.showTooltip();
       }
 
@@ -300,10 +344,15 @@ class Tooltip extends Component {
     return (
       <div
         ref={tooltip => {
+          const {
+            documentContext,
+            tooltipSelector,
+          } = this.props
+
           let referenceElement = tooltip
 
           if (this.props.tooltipSelector) {
-            const el = window.document.querySelector(this.props.tooltipSelector)
+            const el = documentContext.querySelector(tooltipSelector)
 
             if (el)
               referenceElement = el
