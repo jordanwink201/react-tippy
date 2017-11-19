@@ -635,10 +635,11 @@ var Tooltip = function (_Component) {
           reactInstance: this.props.useContext ? this : undefined,
           performance: true,
           shadowDOMReference: this.props.shadowDOMReference ? this.props.shadowDOMReference : null,
+          documentContext: this.props.documentContext ? this.props.documentContext : window.document,
           shouldWatchStateDependency: this.props.shouldWatchStateDependency ? this.props.shouldWatchStateDependency : false
         });
 
-        var target = window.document.querySelector(this.props.tooltipSelector);
+        var target = this.props.documentContext.querySelector(this.props.tooltipSelector);
 
         var isStateDependentInterval = function isStateDependentInterval() {
           if (target.offsetHeight !== 0) {
@@ -696,7 +697,7 @@ var Tooltip = function (_Component) {
             var referenceElement = tooltip;
 
             if (_this4.props.tooltipSelector) {
-              var el = window.document.querySelector(_this4.props.tooltipSelector);
+              var el = _this4.props.documentContext.querySelector(_this4.props.tooltipSelector);
 
               if (el) referenceElement = el;
             }
@@ -1431,8 +1432,8 @@ exports.default = getArrayOfElements;
 * @param {String|Element|Element[]} selector
 * @return {Element[]}
 */
-function getArrayOfElements(selector) {
-  if (selector instanceof Element) {
+function getArrayOfElements(selector, documentContext) {
+  if (selector instanceof Element || documentContext) {
     return [selector];
   }
 
@@ -2037,7 +2038,7 @@ var Tippy = function () {
       hidden: settings.onHidden || settings.hidden || _noop2.default
     };
 
-    this.store = _createTooltips2.default.call(this, (0, _getArrayOfElements2.default)(selector));
+    this.store = _createTooltips2.default.call(this, (0, _getArrayOfElements2.default)(selector, settings.documentContext));
     _globals.Store.push.apply(_globals.Store, this.store);
   }
 

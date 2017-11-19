@@ -16,32 +16,12 @@
     <title>React App</title>
   </head>
   <body>
-    <button id='testing1' style="display: none;">Element #1</button>
-    <button id='testing2'>Element #2</button>
-    <button id='testing3'>Element #3</button>
+    <div>Testing, need to calculate the iframes getBoundingClientRect().x and getBoundingClientRect().y</div>
+    <button id='testing1'>Element #1</button>
 
-    <button id='testing5'>Show Element</button>
-    <button id='testing6'>Hide Element</button>
+    <iframe id='frame1' seamless src='./results.html'></iframe>
 
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start`.
-      To create a production bundle, use `npm run build`.
-    -->
-    <script type="text/javascript">
-      window.document.getElementById('testing5').addEventListener('click', function() {
-        window.document.getElementById('testing1').style.display = 'block'
-      })
-
-      window.document.getElementById('testing6').addEventListener('click', function() {
-        window.document.getElementById('testing1').style.display = 'none'
-      })
     </script>
   </body>
 </html>

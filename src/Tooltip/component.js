@@ -246,10 +246,11 @@ class Tooltip extends Component {
         reactInstance: this.props.useContext ? this : undefined,
         performance: true,
         shadowDOMReference: this.props.shadowDOMReference ? this.props.shadowDOMReference : null,
+        documentContext: this.props.documentContext ? this.props.documentContext : window.document,
         shouldWatchStateDependency: this.props.shouldWatchStateDependency ? this.props.shouldWatchStateDependency : false,
       });
 
-      const target = window.document.querySelector(this.props.tooltipSelector)
+      const target = this.props.documentContext.querySelector(this.props.tooltipSelector)
 
       const isStateDependentInterval = () => {
         if (target.offsetHeight !== 0) {
@@ -303,7 +304,7 @@ class Tooltip extends Component {
           let referenceElement = tooltip
 
           if (this.props.tooltipSelector) {
-            const el = window.document.querySelector(this.props.tooltipSelector)
+            const el = this.props.documentContext.querySelector(this.props.tooltipSelector)
 
             if (el)
               referenceElement = el
