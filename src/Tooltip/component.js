@@ -104,6 +104,7 @@ class Tooltip extends Component {
       return;
     }
 
+    // TO NOTE: this is when a tooltip is already open and only the selector changes because the user didn't close the current tooltip but they clicked to open another tooltip
     // THIS NEEDS to be first Update tooltipSelector
     if (this.props.tooltipSelector !== prevProps.tooltipSelector) {
       this.destroyTippy(this.oldTooltipDOM);

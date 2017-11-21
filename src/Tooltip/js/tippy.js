@@ -38,7 +38,7 @@ class Tippy {
     if (!Browser.SUPPORTED) return
 
     // DOM is presumably mostly ready (for document.body) by instantiation time
-    init(settings.shadowDOMReference)
+    init(settings.shadowDOMReference, settings.documentContext)
 
     this.state = {
       destroyed: false
