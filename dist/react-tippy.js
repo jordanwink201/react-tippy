@@ -16,9 +16,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -122,12 +122,11 @@ var Selectors = exports.Selectors = {
   ARROW: '[x-arrow]',
   TOOLTIPPED_EL: '[data-tooltipped]',
   CONTROLLER: '[data-tippy-controller]'
-};
 
-/**
-* The default settings applied to each instance
-*/
-var Defaults = exports.Defaults = _defineProperty({
+  /**
+  * The default settings applied to each instance
+  */
+};var Defaults = exports.Defaults = _defineProperty({
   html: false,
   position: 'top',
   animation: 'shift',
@@ -485,6 +484,7 @@ var Tooltip = function (_Component) {
         return;
       }
 
+      // TO NOTE: this is when a tooltip is already open and only the selector changes because the user didn't close the current tooltip but they clicked to open another tooltip
       // THIS NEEDS to be first Update tooltipSelector
       if (this.props.tooltipSelector !== prevProps.tooltipSelector) {
         this.destroyTippy(this.oldTooltipDOM);
@@ -1737,13 +1737,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 * To run a single time, once DOM is presumed to be ready
 * @return {Boolean} whether the function has run or not
 */
-function init(shadowDom) {
-  if (init.done) return false;
+function init(shadowDom, documentContext) {
+  if (init.done && init.oldShadowDOM === shadowDom && init.oldDocumentContext === documentContext) {
+    return false;
+  }
+
+  init.oldDocumentContext = documentContext;
+  init.oldShadowDOM = shadowDom;
   init.done = true;
 
   // If the script is in <head>, document.body is null, so it's set in the
   // init function
-
   if (shadowDom) {
     _globals.Defaults.appendTo = shadowDom;
   } else {
@@ -2066,7 +2070,7 @@ var Tippy = function () {
     if (!_globals.Browser.SUPPORTED) return;
 
     // DOM is presumably mostly ready (for document.body) by instantiation time
-    (0, _init2.default)(settings.shadowDOMReference);
+    (0, _init2.default)(settings.shadowDOMReference, settings.documentContext);
 
     this.state = {
       destroyed: false
